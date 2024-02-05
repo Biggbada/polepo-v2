@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue</h1>
+
+    {% for post in posts %}
+        {{ post.title }}
+    {% endfor %}
+
+{% endblock %}
