@@ -3,10 +3,29 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
+    <hr>
     <h1>Bienvenue</h1>
-
+    <hr>
     {% for post in posts %}
-        {{ post.title }}
+        <div class="card col-3">
+            <div class="card-header">
+                <a href="{{ path('app_post_show', {'id': post.id}) }}">
+                    {{ post.title }}
+                </a>
+            </div>
+            <div class="card-body">
+                {{ post.content }}
+            </div>
+            <div class="card-footer">
+                <p>
+                    Créé le {{ post.createdAt | date('d-m-Y-H-i') }}
+                </p>
+                <p>
+                    {% if post.updatedAt %}
+                        Mis à jour le {{ post.createdAt | date('d-m-Y-H-i') }}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
     {% endfor %}
-
 {% endblock %}

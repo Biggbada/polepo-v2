@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New FileCategory{% endblock %}
+
+{% block body %}
+    <h1>Create new FileCategory</h1>
+
+    {{ include('file_category/_form.html.twig') }}
+
+    <a href="{{ path('app_file_category_index') }}">back to list</a>
+{% endblock %}

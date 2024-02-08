@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FileCategory{% endblock %}
+
+{% block body %}
+    <h1>FileCategory</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ file_category.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ file_category.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ file_category.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_file_category_index') }}">back to list</a>
+
+    <a href="{{ path('app_file_category_edit', {'id': file_category.id}) }}">edit</a>
+
+    {{ include('file_category/_delete_form.html.twig') }}
+{% endblock %}

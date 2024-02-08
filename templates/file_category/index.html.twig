@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FileCategory index{% endblock %}
+
+{% block body %}
+    <h1>FileCategory index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for file_category in file_categories %}
+            <tr>
+                <td>{{ file_category.id }}</td>
+                <td>{{ file_category.title }}</td>
+                <td>{{ file_category.description }}</td>
+                <td>
+                    <a href="{{ path('app_file_category_show', {'id': file_category.id}) }}">show</a>
+                    <a href="{{ path('app_file_category_edit', {'id': file_category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_file_category_new') }}">Create new</a>
+{% endblock %}
