@@ -28,6 +28,9 @@ class File
     #[ORM\Column(length: 10)]
     private ?string $extension = null;
 
+    #[ORM\ManyToOne(inversedBy: 'files')]
+    private ?Post $post = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +80,18 @@ class File
     public function setExtension(string $extension): static
     {
         $this->extension = $extension;
+
+        return $this;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): static
+    {
+        $this->post = $post;
 
         return $this;
     }

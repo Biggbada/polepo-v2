@@ -3,24 +3,32 @@
 {% block title %}FileCategory{% endblock %}
 
 {% block body %}
-    <h1>FileCategory</h1>
+    <h1>{{ file_category.title }}</h1>
+    <div class="info">
+        {{ file_category.description }}
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ file_category.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ file_category.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ file_category.description }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row gap-2">
+        {% for file in file_category.files %}
+            <div class="card col-3">
+                <div class="card-header">
+                    <a href="{{ path('app_file_show', {'id': file.id}) }}">
+                        {{ file.name[:30] }}...
+                    </a>
+                </div>
+                {% if file.extension == 'jpg' or file.extension == 'png' or file.extension == 'gif' %}
+                    <div class="card-body">
+                        <img class="img-thumbnail" src="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" alt="{{ file.name }}" width="100%">
+                    </div>
+                {% endif %}
+                {% if file.extension == 'mp4' or file.extension == 'avi' or file.extension == 'mpg' %}
+                    <div class="card-body">
+                        <video class="img-thumbnail" controls="true" muted="true" src="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" alt="{{ file.name }}"></video>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
 
     <a href="{{ path('app_file_category_index') }}">back to list</a>
 

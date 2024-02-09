@@ -4,23 +4,48 @@
 
 {% block body %}
     <h1>File</h1>
+    <div class="row gap-4">
+        <div class="card col-6">
+            {% if file.extension == 'jpg' or file.extension == 'png' or file.extension == 'gif' %}
+                <div class="card-body">
+                    <img class="img-thumbnail" src="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" alt="{{ file.name }}">
+                </div>
+            {% endif %}
+            {% if file.extension == 'mp4' or file.extension == 'avi' or file.extension == 'mpg' %}
+                <div class="card-body">
+                    <video class="img-thumbnail" controls="true" autoplay="true" muted="true" src="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" alt="{{ file.name }}"></video>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card col-5">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ file.id }}</td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>
+                        <a href="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" download>
+                            {{ file.name }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Télécharger</th>
+                    <td>
+                        <a href="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" download>
+                                {{ file.name }}
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ file.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ file.name }}</td>
-            </tr>
-            <tr>
-                <th>Url</th>
-                <td>{{ file.url }}</td>
-            </tr>
-        </tbody>
-    </table>
+
 
     <a href="{{ path('app_file_index') }}">back to list</a>
 

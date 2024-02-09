@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\File;
 use App\Form\FileType;
 use App\Repository\FileRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -26,7 +27,7 @@ class FileController extends AbstractController
     }
 
     #[Route('/new', name: 'app_file_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, FileUploader $fileUploader): Response
     {
         $file = new File();
         $form = $this->createForm(FileType::class, $file);
@@ -40,25 +41,21 @@ class FileController extends AbstractController
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
             if ($attachment) {
+
+                $targetDirectory = $this->getParameter('files_directory').'/'.$file->getCategory()->getPath();
+
+
                 $extension = $attachment->guessExtension();
                 $originalFilename = pathinfo($attachment->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
-                $file->setName($safeFilename.'.'.$extension);
-                $file->setUrl($newFilename);
+                $newFilename = $safeFilename.'.'.$extension;
+                $file->setName($newFilename);
+                $fileUrl = $fileUploader->upload($attachment, $targetDirectory);
+
+                $file->setUrl($fileUrl);
                 $file->setExtension($extension);
 
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $attachment->move(
-                        $this->getParameter('files_directory').'/'.$file->getCategory()->getPath(),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
             }
 
             $entityManager->persist($file);
