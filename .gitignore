@@ -1,6 +1,7 @@
 .env
 .idea/
 /public/uploads/
+/migrations
 
 ###> symfony/framework-bundle ###
 /.env
