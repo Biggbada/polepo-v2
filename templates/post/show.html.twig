@@ -5,30 +5,72 @@
 {% block body %}
     <h1>Post</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ post.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ post.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ post.content }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="card text-bg-dark ">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ post.id }}</td>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td>{{ post.title }}</td>
+                </tr>
+                <tr>
+                    <th>Content</th>
+                    <td>{{ post.content | raw }}</td>
+                </tr>
+                <tr>
+                    <th>CreatedAt</th>
+                    <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                {% if post.author %}
+                    <a href="{{ path('app_user_show', {'id': post.author.id}) }}">
+                        {{ post.author.userName }}
+                    </a>
+                {% endif %}
+                <tr>
+                    <th>UpdatedAt</th>
+                    <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                {% if post.files.count %}
+                    <tr>
+                        <th>Fichiers</th>
+                        <td>
+                            {% for file in post.files %}
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('app_file_show', {'id': file.id}) }}">
+                                            {{ file.name }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if post.tags.count %}
+                    <tr>
+                        <th>Tags</th>
+                        <td>
+                            {% for tag in post.tags %}
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('app_tag_show', {'id': tag.id}) }}">
+                                            {{ tag.name }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
     <a href="{{ path('app_post_index') }}">back to list</a>
 

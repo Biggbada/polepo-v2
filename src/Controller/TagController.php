@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tag;
 use App\Form\TagType;
+use App\Repository\PostRepository;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,10 +44,24 @@ class TagController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tag_show', methods: ['GET'])]
-    public function show(Tag $tag): Response
+    public function show(Tag $tag, PostRepository $postRepository): Response
     {
+        $posts = $postRepository->findAll();
+
+        $selectedPosts = [];
+        foreach ($posts as $post) {
+            if ($post->getTags()) {
+                $tags = $post->getTags();
+                foreach ($tags as $foundedTag) {
+                    if($foundedTag->getId() == $tag->getId()) {
+                        $selectedPosts[] = $post;
+                    }
+                }
+            }
+        }
         return $this->render('tag/show.html.twig', [
             'tag' => $tag,
+            'posts' => $posts
         ]);
     }
 

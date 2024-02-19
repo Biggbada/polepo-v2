@@ -31,6 +31,9 @@ class File
     #[ORM\ManyToOne(inversedBy: 'files')]
     private ?Post $post = null;
 
+    #[ORM\ManyToOne(inversedBy: 'files')]
+    private ?User $uploadedBy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +95,18 @@ class File
     public function setPost(?Post $post): static
     {
         $this->post = $post;
+
+        return $this;
+    }
+
+    public function getUploadedBy(): ?User
+    {
+        return $this->uploadedBy;
+    }
+
+    public function setUploadedBy(?User $uploadedBy): static
+    {
+        $this->uploadedBy = $uploadedBy;
 
         return $this;
     }

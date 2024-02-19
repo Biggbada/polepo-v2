@@ -3,25 +3,62 @@
 {% block title %}PostCategory{% endblock %}
 
 {% block body %}
-    <h1>PostCategory</h1>
+    <h1>{{ post_category.title }}</h1>
+    <p class="fst-italic">
+        {{ post_category.description }}
+    </p>
+    <div class="row gap-3">
+        {% for post in post_category.posts %}
+            <div class="card text-bg-dark col-3">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <a href="{{ path('app_post_show', {'id': post.id}) }}">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    <hr>
+                    <p class="card-text">
+                        {{ post.content[:100] }}
+                    </p>
+                    {% if post.featuredImg %}
+                        <p>{{ post.featuredImg.url }}</p>
+                        <img width="100%" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">
+                    {% endif %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ post_category.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ post_category.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ post_category.description }}</td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+                <div class="card-footer">
+                    <p>
+                        créé le: {{ post.createdAt | date('d-m-Y à H:i') }}
 
+                    {% if post.author %}
+                        <br>
+                        par:
+                        <a href="{{ path('app_user_show', {'id': post.author.id}) }}">
+                            {{ post.author.userName }}
+                        </a>
+
+                    {% endif %}
+                    </p>
+                    {% if post.updatedAt %}
+                         mis à jour le {{ post.updatedAt | date('d-m-Y à H:i') }}
+                    {% endif %}
+                    {% if post.files %}
+                        <ul>
+                            {% for file in post.files %}
+                                <li>
+                                    <a href="{{ path('app_file_show', {'id': file.id}) }}">
+                                        {{ file.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+
+    </div>
     <a href="{{ path('app_post_category_index') }}">back to list</a>
 
     <a href="{{ path('app_post_category_edit', {'id': post_category.id}) }}">edit</a>

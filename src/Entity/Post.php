@@ -38,10 +38,25 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: File::class)]
     private Collection $files;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
+    private ?self $relatedPost = null;
+
+    #[ORM\OneToMany(mappedBy: 'relatedPost', targetEntity: self::class)]
+    private Collection $comments;
+
+    public $attachment = null;
+
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    private ?User $author = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?File $featuredImg = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->files = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -159,6 +174,72 @@ class Post
                 $file->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRelatedPost(): ?self
+    {
+        return $this->relatedPost;
+    }
+
+    public function setRelatedPost(?self $relatedPost): static
+    {
+        $this->relatedPost = $relatedPost;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(self $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setRelatedPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(self $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getRelatedPost() === $this) {
+                $comment->setRelatedPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getFeaturedImg(): ?File
+    {
+        return $this->featuredImg;
+    }
+
+    public function setFeaturedImg(?File $featuredImg): static
+    {
+        $this->featuredImg = $featuredImg;
 
         return $this;
     }

@@ -1,3 +1,49 @@
 body {
-    background-color: skyblue;
+    background-color: #020204;
+    color: #22b455;
+}
+
+a, h1, h2, h3, h4, h5, h6, td {
+    text-decoration: none;
+    color: #92e5a1 !important;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #22b455;
+}
+
+.navbar-brand {
+    color: #fff !important;
+}
+
+.active {
+    text-decoration: none;
+    color: #22b455 !important;
+}
+
+
+
+p, button, form, .form-control, th {
+    color: #22b455 !important;
+    border-color: #22b455 !important;
+}
+
+.btn {
+    background-color: transparent;
+}
+
+.btn:hover {
+    color: #92e5a1 !important;
+    background-color: #020204 ;
+
+}
+
+::placeholder {
+    color: #22b455 !important;
+}
+
+.img-thumbnail, .table, table, .table>:not(caption)>*>* {
+    background-color: transparent;
+    border-color: #22b455;
 }

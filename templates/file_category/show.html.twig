@@ -10,11 +10,16 @@
 
     <div class="row gap-2">
         {% for file in file_category.files %}
-            <div class="card col-3">
+            <div class="card text-bg-dark col-3">
                 <div class="card-header">
                     <a href="{{ path('app_file_show', {'id': file.id}) }}">
                         {{ file.name[:30] }}...
                     </a>
+                    {% if file.uploadedBy %}
+                        <p class="fst-italic">
+                            uploadé par {{ file.uploadedBy.userName }}
+                        </p>
+                    {% endif %}
                 </div>
                 {% if file.extension == 'jpg' or file.extension == 'png' or file.extension == 'gif' %}
                     <div class="card-body">
@@ -25,6 +30,11 @@
                     <div class="card-body">
                         <video class="img-thumbnail" controls="true" muted="true" src="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" alt="{{ file.name }}"></video>
                     </div>
+                {% endif %}
+                {% if file.extension == 'pdf' %}
+                    <object type="application/pdf" height="100%" data={{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }} >
+                    </object>
+
                 {% endif %}
             </div>
         {% endfor %}

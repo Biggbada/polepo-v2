@@ -15,6 +15,21 @@
                 <th>Name</th>
                 <td>{{ tag.name }}</td>
             </tr>
+            {% if tag.posts.count %}
+                <tr>
+                    <th>Articles</th>
+                    <td>
+                        {% for post in posts %}
+                            <ul>
+                                <li>
+                                    <a href="{{ path('app_post_show', {'id': post.id}) }}">
+                                        {{ post.title }}
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endfor %}</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 

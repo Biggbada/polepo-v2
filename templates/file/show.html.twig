@@ -3,9 +3,10 @@
 {% block title %}File{% endblock %}
 
 {% block body %}
-    <h1>File</h1>
+    <h1>{{ file.name }}</h1>
     <div class="row gap-4">
-        <div class="card col-6">
+        <div class="card text-bg-dark col-8">
+            {{ file.category.path }}
             {% if file.extension == 'jpg' or file.extension == 'png' or file.extension == 'gif' %}
                 <div class="card-body">
                     <img class="img-thumbnail" src="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" alt="{{ file.name }}">
@@ -16,8 +17,13 @@
                     <video class="img-thumbnail" controls="true" autoplay="true" muted="true" src="{{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }}" alt="{{ file.name }}"></video>
                 </div>
             {% endif %}
+            {% if file.extension == 'pdf' %}
+                <object type="application/pdf" height="550" data={{ asset('uploads/files/' ~ file.category.path ~ '/' ~file.url) }} >
+                </object>
+
+            {% endif %}
         </div>
-        <div class="card col-5">
+        <div class="card text-bg-dark col-3">
             <table class="table">
                 <tbody>
                 <tr>
@@ -40,6 +46,14 @@
                         </a>
                     </td>
                 </tr>
+                {% if file.uploadedBy %}
+                    <tr>
+                        <th>Uploadé par</th>
+                        <td>
+                            {{ file.uploadedBy.userName }}
+                        </td>
+                    </tr>
+                {% endif %}
                 </tbody>
             </table>
         </div>
