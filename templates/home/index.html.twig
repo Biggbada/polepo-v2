@@ -1,72 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil{% endblock %}
+
 
 {% block body %}
-    <hr>
-    <h1>Bienvenue</h1>
-    <hr>
-    <div class="row">
-        <p>Ici c'est open-bar</p>
-        <div class="col-6">
-            <img class="img-thumbnail" src="{{ asset('pictures/Kremlin-Moscou.jpg') }}" title="Bienvenue au Berghof">
-        </div>
-        <div class="col-6">
-            <img class="img-thumbnail" src="{{ asset('pictures/poutine-champagne.jpg') }}" title="Daaa">
-        </div>
-    </div>
-    <hr>
-    <div class="row gap-3">
-        <h2>Derniers articles</h2>
-        <h3>/politiquefr</h3>
-        {% for post in posts %}
-            <div class="card text-bg-dark col-3">
-                <div class="card-header">
-                    <a href="{{ path('app_post_show', {'id': post.id}) }}">
-                        <h2 class="card-title">
-                            {{ post.title }}
-                        </h2>
-                    </a>
-                    <p class="card-subtitle mb-2 text-body-secondary">
-                        {{ post.postCategory }}
-                    </p>
-                </div>
-                <div class="card-body">
-                    <p>
-                        {{ post.content[:200] }}...
-
-                    </p>
-                    <a href="{{ path('app_post_show', {'id': post.id}) }}">
-                        <button class="btn btn-info">
-                            Voir +
-                        </button>
-                    </a>
-
-                </div>
-                <div class="card-footer">
-                    <p>
-                        Créé le {{ post.createdAt | date('d-m-Y-H-i') }}
-                    </p>
-                    <p>
-                        {% if post.updatedAt %}
-                            Mis à jour le {{ post.createdAt | date('d-m-Y-H-i') }}
-                        {% endif %}
-                    </p>
-                    {% if post.files %}
-                        <ul>
-                            {% for file in post.files %}
-                                <li>
-                                    <a href="{{ path('app_file_show', {'id': file.id}) }}">
-                                        {{ file.name | slice(0,30) }}...
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
+    {% if is_granted('ROLE_TRUSTED_USER') %}
+        <hr>
+        <h1>Bienvenue</h1>
+        <hr>
+        <div class="row">
+            <p>Ici c'est open-bar</p>
+            <div class="col-6">
+                <img class="img-thumbnail" src="{{ asset('pictures/Kremlin-Moscou.jpg') }}" title="Bienvenue au Berghof"/>
             </div>
-        {% endfor %}
-    </div>
+            <div class="col-6">
+                <img class="img-thumbnail" src="{{ asset('pictures/poutine-champagne.jpg') }}" title="Daaa"/>
+            </div>
+        </div>
+        <hr>
+        <div class="row gap-3">
+            <h2>Derniers articles</h2>
+            <h3>/politiquefr</h3>
+            {% for post in posts %}
+                <div class="card text-bg-dark col-3">
+                    <div class="card-header">
+                        <a href="{{ path('app_post_show', {'id': post.id}) }}">
+                            <h2 class="card-title">
+                                {{ post.title }}
+                            </h2>
+                        </a>
+                        <p class="card-subtitle mb-2 text-body-secondary">
+                            {{ post.postCategory }}
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            {{ post.content[:200] }}...
+
+                        </p>
+                        <a href="{{ path('app_post_show', {'id': post.id}) }}">
+                            <button class="btn btn-info">
+                                Voir +
+                            </button>
+                        </a>
+
+                    </div>
+                    <div class="card-footer">
+                        <p>
+                            Créé le {{ post.createdAt | date('d-m-Y-H-i') }}
+                        </p>
+                        <p>
+                            {% if post.updatedAt %}
+                                Mis à jour le {{ post.createdAt | date('d-m-Y-H-i') }}
+                            {% endif %}
+                        </p>
+                        {% if post.files %}
+                            <ul>
+                                {% for file in post.files %}
+                                    <li>
+                                        <a href="{{ path('app_file_show', {'id': file.id}) }}">
+                                            {{ file.name | slice(0,30) }}...
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
 
 
 {% endblock %}
