@@ -12,6 +12,11 @@
                 </p>
             {% endif %}
         </div>
+        <div class="">
+            {% if post_category.featuredImg %}
+                <img height="200" src="{{ asset('uploads/files/' ~ post_category.featuredImg.category.path ~ '/' ~ post_category.featuredImg.url) }}" alt="">
+            {% endif %}
+        </div>
     </div>
     <hr>
     <p>
