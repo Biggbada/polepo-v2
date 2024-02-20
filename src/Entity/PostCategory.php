@@ -25,6 +25,9 @@ class PostCategory
     #[ORM\OneToMany(mappedBy: 'postCategory', targetEntity: Post::class)]
     private Collection $posts;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?File $featuredImg = null;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -92,5 +95,17 @@ class PostCategory
     public function __toString(): string
     {
         return $this->title;
+    }
+
+    public function getFeaturedImg(): ?File
+    {
+        return $this->featuredImg;
+    }
+
+    public function setFeaturedImg(?File $featuredImg): static
+    {
+        $this->featuredImg = $featuredImg;
+
+        return $this;
     }
 }

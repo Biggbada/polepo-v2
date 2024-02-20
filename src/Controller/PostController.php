@@ -34,14 +34,13 @@ class PostController extends AbstractController
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             if ($this->getUser()) {
                 $post->setAuthor($this->getUser());
             }
-            $postCategory = $categoryRepository->find(1);
             $post->setCreatedAt(new \DateTimeImmutable('now'));
-            $post->setPostCategory($postCategory);
+            $category = $categoryRepository->find($request->get('category')) ;
+            $post->setPostCategory($category);
 
             /** @var UploadedFile $featuredImg */
             $featuredImg = $form->get('featuredImg')->getData();
@@ -111,7 +110,7 @@ class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('post/new.html.twig', [
@@ -136,37 +135,77 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $post->setUpdatedAt(new \DateTimeImmutable('now'));
+            /** @var UploadedFile $featuredImg */
+            $featuredImg = $form->get('featuredImg')->getData();
 
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form->get('attachment')->getData();
-
-            // this condition is needed because the 'uploadedFile' field is not required
-            // so the file must be processed only when a file is uploaded
-            if ($uploadedFile)
-            {
-                $file = new File();
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($featuredImg) {
+                $originalFilename = $featuredImg->getClientOriginalName();
                 $fileCategory = $fileCategoryRepository->find(1);
+                $file = new File();
                 $file->setCategory($fileCategory);
+
                 $targetDirectory = $this->getParameter('files_directory').'/'.$file->getCategory()->getPath();
-                $extension = $uploadedFile->attachment->guessExtension();
-                $originalFilename = pathinfo($uploadedFile->attachment->getClientOriginalName(), PATHINFO_FILENAME);
+
+
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
+                $extension = $featuredImg->guessExtension();
                 $newFilename = $safeFilename.'.'.$extension;
-                $uploadedFile->setName($newFilename);
-                $fileUrl = $fileUploader->upload($uploadedFile, $targetDirectory);
+                $file->setName($newFilename);
+                $fileUrl = $fileUploader->upload($featuredImg, $targetDirectory);
+
+                $file->setUrl($fileUrl);
+                $file->setExtension($extension);
+                $post->setFeaturedImg($file);
+                if ($this->getUser()) {
+                    $file->setUploadedBy($this->getUser());
+                }
+
+                $entityManager->persist($file);
+
+
+
+            }
+
+            /** @var UploadedFile $attachment */
+            $attachment = $form->get('attachment')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($attachment) {
+                $originalFilename = $attachment->getClientOriginalName();
+                $fileCategory = $fileCategoryRepository->find(1);
+                $file = new File();
+                $file->setCategory($fileCategory);
+
+                $targetDirectory = $this->getParameter('files_directory').'/'.$file->getCategory()->getPath();
+
+
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $extension = $attachment->guessExtension();
+                $newFilename = $safeFilename.'.'.$extension;
+                $file->setName($newFilename);
+                $fileUrl = $fileUploader->upload($attachment, $targetDirectory);
 
                 $file->setUrl($fileUrl);
                 $file->setExtension($extension);
                 $file->setPost($post);
+                if ($this->getUser()) {
+                    $file->setUploadedBy($this->getUser());
+                }
+                $entityManager->persist($file);
+
+
 
             }
 
-            $entityManager->persist($file);
-
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_category_show', ['id' => $post->getPostCategory()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('post/edit.html.twig', [

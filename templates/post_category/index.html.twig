@@ -3,35 +3,21 @@
 {% block title %}PostCategory index{% endblock %}
 
 {% block body %}
-    <h1>PostCategory index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for post_category in post_categories %}
-            <tr>
-                <td>{{ post_category.id }}</td>
-                <td>{{ post_category.title }}</td>
-                <td>{{ post_category.description }}</td>
-                <td>
-                    <a href="{{ path('app_post_category_show', {'id': post_category.id}) }}">show</a>
-                    <a href="{{ path('app_post_category_edit', {'id': post_category.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
+    <h1>Catégories d'articles</h1>
+    <div class="row gap-2">
+        {% for category in post_categories %}
+            <div id="post-card" class="card text-bg-dark mt-4">
+                <a href="{{ path('app_post_category_show', {'id': category.id}) }}">
+                    <img id="article-header" src="{{ asset('uploads/files/' ~ category.featuredImg.category.path ~ '/' ~category.featuredImg.url) }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.title }}</h5>
+                        <p class="card-text">{{ category.description | raw }}</p>
+                    </div>
+                </a>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
+
 
     <a href="{{ path('app_post_category_new') }}">Create new</a>
 {% endblock %}

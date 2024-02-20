@@ -39,6 +39,19 @@ p, button, form, .form-control, th {
 
 }
 
+.btn-danger {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    color: crimson !important;
+    border-color: crimson !important;
+}
+
+.btn-danger:hover {
+    color: white !important;
+    border-color: white !important;
+    background-color: crimson; !important;
+}
+
 ::placeholder {
     color: #22b455 !important;
 }
@@ -46,4 +59,13 @@ p, button, form, .form-control, th {
 .img-thumbnail, .table, table, .table>:not(caption)>*>* {
     background-color: transparent;
     border-color: #22b455;
+}
+#article-header {
+    padding: 1em;
+    max-height: 40vh;
+    width: fit-content;
+}
+#post-card {
+    width: fit-content;
+    margin-bottom: 1em;
 }

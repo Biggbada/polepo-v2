@@ -11,6 +11,7 @@
                 <th>Id</th>
                 <th>Title</th>
                 <th>Description</th>
+                <th>Path</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,6 +21,7 @@
                 <td>{{ file_category.id }}</td>
                 <td>{{ file_category.title }}</td>
                 <td>{{ file_category.description }}</td>
+                <td>{{ file_category.path }}</td>
                 <td>
                     <a href="{{ path('app_file_category_show', {'id': file_category.id}) }}">show</a>
                     <a href="{{ path('app_file_category_edit', {'id': file_category.id}) }}">edit</a>

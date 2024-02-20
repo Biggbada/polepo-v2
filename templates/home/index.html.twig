@@ -6,7 +6,20 @@
     <hr>
     <h1>Bienvenue</h1>
     <hr>
+    <div class="row">
+        <h2>Ici</h2>
+        <p>c'est open-bar</p>
+        <div class="col-6">
+            <img class="img-thumbnail" src="{{ asset('pictures/Kremlin-Moscou.jpg') }}" title="Bienvenue au Berghof">
+        </div>
+        <div class="col-6">
+            <img class="img-thumbnail" src="{{ asset('pictures/poutine-champagne.jpg') }}" title="Daaa">
+        </div>
+    </div>
+    <hr>
     <div class="row gap-3">
+        <h2>Derniers articles</h2>
+        <h3>/politiquefr</h3>
         {% for post in posts %}
             <div class="card text-bg-dark col-3">
                 <div class="card-header">
@@ -55,5 +68,6 @@
             </div>
         {% endfor %}
     </div>
+
 
 {% endblock %}

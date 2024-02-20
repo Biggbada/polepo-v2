@@ -15,11 +15,12 @@
                     <a href="{{ path('app_file_show', {'id': file.id}) }}">
                         {{ file.name[:30] }}...
                     </a>
+                    <p class="fst-italic">.{{ file.extension }}
+
                     {% if file.uploadedBy %}
-                        <p class="fst-italic">
-                            uploadé par {{ file.uploadedBy.userName }}
-                        </p>
+                         / uploadé par {{ file.uploadedBy.userName }}
                     {% endif %}
+                    </p>
                 </div>
                 {% if file.extension == 'jpg' or file.extension == 'png' or file.extension == 'gif' %}
                     <div class="card-body">
