@@ -6,11 +6,11 @@
     <h1>{{ post_category.title }}</h1>
     <div class="row">
         <div class="col-6">
-            <p class="fst-italic">
-                {{ post_category.description }}
+            {% if post_category.description %}
+                <p class="fst-italic">
+                    {{ post_category.description }}
                 </p>
             {% endif %}
-
         </div>
     </div>
     <hr>
