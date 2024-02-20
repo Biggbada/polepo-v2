@@ -3,35 +3,57 @@
 {% block title %}Tag{% endblock %}
 
 {% block body %}
-    <h1>Tag</h1>
+    <h1>Tag {{ tag.name }}</h1>
+    <div class="row gap-2">
+        {% for post in posts %}
+            <div class="card text-bg-dark col-3">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <a href="{{ path('app_post_show', {'id': post.id}) }}">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    <hr>
+                    <p class="card-text">
+                        {{ post.content[:100] }}
+                    </p>
+                    {% if post.featuredImg %}
+                        <p>{{ post.featuredImg.url }}</p>
+                        <img width="100%" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">
+                    {% endif %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ tag.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ tag.name }}</td>
-            </tr>
-            {% if tag.posts.count %}
-                <tr>
-                    <th>Articles</th>
-                    <td>
-                        {% for post in posts %}
-                            <ul>
+                </div>
+                <div class="card-footer">
+                    <p>
+                        créé le: {{ post.createdAt | date('d-m-Y à H:i') }}
+
+                        {% if post.author %}
+                            <br>
+                            par:
+                            <a href="{{ path('app_user_show', {'id': post.author.id}) }}">
+                                {{ post.author.userName }}
+                            </a>
+
+                        {% endif %}
+                    </p>
+                    {% if post.updatedAt %}
+                        mis à jour le {{ post.updatedAt | date('d-m-Y à H:i') }}
+                    {% endif %}
+                    {% if post.files %}
+                        <ul>
+                            {% for file in post.files %}
                                 <li>
-                                    <a href="{{ path('app_post_show', {'id': post.id}) }}">
-                                        {{ post.title }}
+                                    <a href="{{ path('app_file_show', {'id': file.id}) }}">
+                                        {{ file.name }}
                                     </a>
                                 </li>
-                            </ul>
-                        {% endfor %}</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
     <a href="{{ path('app_tag_index') }}">back to list</a>
 

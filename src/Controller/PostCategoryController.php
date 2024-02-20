@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/post/category')]
@@ -89,6 +90,7 @@ class PostCategoryController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_post_category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PostCategory $postCategory, EntityManagerInterface $entityManager, FileCategoryRepository $fileCategoryRepository, SluggerInterface $slugger, FileUploader $fileUploader): Response
     {
@@ -141,6 +143,7 @@ class PostCategoryController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_post_category_delete', methods: ['POST'])]
     public function delete(Request $request, PostCategory $postCategory, EntityManagerInterface $entityManager): Response
     {
