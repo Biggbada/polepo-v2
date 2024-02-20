@@ -39,10 +39,12 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_TRUSTED_USER }
+        - { path: ^/post, roles: ROLE_TRUSTED_USER }
+        - { path: ^/, roles: PUBLIC_ACCESS }
 
     role_hierarchy:
-        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH, ROLE_TRUSTED_USER ]
+        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+        ROLE_ADMIN: [ ROLE_TRUSTED_USER ]
 
 when@test:
     security:
