@@ -8,11 +8,6 @@
         <div class="col-6">
             <p class="fst-italic">
                 {{ post_category.description }}
-            </p>
-            {% if post_category.featuredImg %}
-                <p>
-                    <img width="350" src="{{ asset('uploads/files/' ~ post_category.featuredImg.category.path ~ '/' ~post_category.featuredImg.url) }}" alt="">
-
                 </p>
             {% endif %}
 
