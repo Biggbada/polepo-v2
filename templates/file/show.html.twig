@@ -68,5 +68,7 @@
 
     <a href="{{ path('app_file_edit', {'id': file.id}) }}">edit</a>
 
-    {{ include('file/_delete_form.html.twig') }}
+    {% if file.uploadedBy == app.user or is_granted('ROLE_ADMIN') %}
+        {{ include('file/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}

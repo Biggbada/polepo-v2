@@ -12,7 +12,8 @@
 
     </button>
     <p>
-        {{ include('post/_delete_form.html.twig') }}
-
+        {% if post.author == app.user or is_granted('ROLE_ADMIN') %}
+            {{ include('post/_delete_form.html.twig') }}
+        {% endif %}
     </p>
 {% endblock %}

@@ -9,5 +9,7 @@
 
     <a href="{{ path('app_file_index') }}">back to list</a>
 
-    {{ include('file/_delete_form.html.twig') }}
+    {% if file.uploadedBy == app.user or is_granted('ROLE_ADMIN') %}
+        {{ include('file/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}

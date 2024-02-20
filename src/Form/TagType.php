@@ -18,7 +18,7 @@ class TagType extends AbstractType
             ->add('posts', EntityType::class, [
                 'required' => false,
                 'class' => Post::class,
-'choice_label' => 'id',
+'choice_label' => 'title',
 'multiple' => true,
             ])
         ;

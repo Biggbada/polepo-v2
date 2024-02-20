@@ -70,6 +70,7 @@
             Éditer
         </button>
     </a>
-
-    {{ include('post/_delete_form.html.twig') }}
+    {% if post.author == app.user or is_granted('ROLE_ADMIN') %}
+        {{ include('post/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}
