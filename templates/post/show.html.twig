@@ -4,24 +4,17 @@
 
 {% block body %}
     <div id="post-card" class="card text-bg-dark mt-4">
-        <a href="{{ path('app_file_show', {'id': post.featuredImg.id}) }}">
-            <img id="article-header" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" class="card-img-top" alt="...">
-        </a>
+        {% if post.featuredImg %}
+            <a href="{{ path('app_file_show', {'id': post.featuredImg.id}) }}">
+                <img id="article-header" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" class="card-img-top" alt="...">
+            </a>
+        {% endif %}
+
         <div class="card-body">
             <h5 class="card-title">{{ post.title }}</h5>
             <p class="card-text">{{ post.content | raw }}</p>
         </div>
-        {% if post.files %}
-            <ul class="list-group list-group-flush">
-                {% for file in post.files %}
-                    <li class="list-group-item">
-                        <a href="{{ path('app_file_show', {'id': file.id}) }}">
-                            {{ file.name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+
         <div class="card-body">
             <p>publié le: {{ post.createdAt ? post.createdAt|date('d-m-Y H:i') : '' }}
                 {% if post.author %}

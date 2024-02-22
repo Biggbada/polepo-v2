@@ -20,7 +20,6 @@
         <hr>
         <div class="row gap-3">
             <h2>Derniers articles</h2>
-            <h3>/politiquefr</h3>
             {% for post in posts %}
                 <div class="card text-bg-dark col-3">
                     <div class="card-header">
@@ -34,13 +33,9 @@
                         </p>
                     </div>
                     <div class="card-body">
-                        <p>
-                            {{ post.content[:200] }}...
-
-                        </p>
                         <a href="{{ path('app_post_show', {'id': post.id}) }}">
                             <button class="btn btn-info">
-                                Voir +
+                                Lire
                             </button>
                         </a>
 
