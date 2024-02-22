@@ -36,9 +36,7 @@
                         </a>
                     </h2>
                     <hr>
-                    <p class="card-text">
-                        {{ post.content[:100] }}
-                    </p>
+
                     {% if post.featuredImg %}
                         <p>{{ post.featuredImg.url }}</p>
                         <img width="100%" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">

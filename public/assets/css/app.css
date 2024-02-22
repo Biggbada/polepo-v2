@@ -3,6 +3,10 @@ body {
     color: #22b455;
 }
 
+.turbo-progress-bar {
+    color: #22b455;
+}
+
 a, h1, h2, h3, h4, h5, h6, td {
     text-decoration: none;
     color: #92e5a1 !important;
@@ -62,7 +66,7 @@ p, button, form, .form-control, th {
 }
 #article-header {
     padding: 1em;
-    max-height: 40vh;
+    max-height: 25vh;
     width: fit-content;
 }
 #post-card {
