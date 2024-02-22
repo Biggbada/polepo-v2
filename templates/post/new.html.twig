@@ -12,3 +12,12 @@
     </button>
 
 {% endblock %}
+
+{% block javascripts %}
+
+
+    {{ parent() }}
+    <script>
+        new FroalaEditor('textarea');
+    </script>
+{% endblock %}

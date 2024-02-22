@@ -16,4 +16,13 @@
             {{ include('post/_delete_form.html.twig') }}
         {% endif %}
     </p>
+
+{% endblock %}
+{% block javascripts %}
+
+
+    {{ parent() }}
+    <script>
+        new FroalaEditor('textarea');
+    </script>
 {% endblock %}
