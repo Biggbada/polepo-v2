@@ -38,7 +38,7 @@
                     <hr>
 
                     {% if post.featuredImg %}
-                        <img id="article-header" width="100%" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">
+                        <img id="article-header" class="img-fluid" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">
                     {% endif %}
 
                 </div>

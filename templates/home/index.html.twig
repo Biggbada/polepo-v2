@@ -27,6 +27,9 @@
                             <h2 class="card-title">
                                 {{ post.title }}
                             </h2>
+                            {% if post.featuredImg %}
+                                <img class="img-fluid" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">
+                            {% endif %}
                         </a>
                         <p class="card-subtitle mb-2 text-body-secondary">
                             {{ post.postCategory }}
