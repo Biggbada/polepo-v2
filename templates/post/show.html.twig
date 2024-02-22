@@ -3,55 +3,62 @@
 {% block title %}Post{% endblock %}
 
 {% block body %}
-    <div id="post-card" class="card text-bg-dark mt-4">
-        {% if post.featuredImg %}
-            <a href="{{ path('app_file_show', {'id': post.featuredImg.id}) }}">
-                <img id="article-header" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" class="card-img-top" alt="...">
-            </a>
-        {% endif %}
+    <div class="row">
+        <div id="post-card" class="card col-3 text-bg-dark mt-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                {% if post.featuredImg %}
+                    <a href="{{ path('app_file_show', {'id': post.featuredImg.id}) }}">
+                        <img id="article-header"
+                             src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}"
+                             class="card-img-top" alt="...">
+                    </a>
+                {% endif %}
+                <hr>
+                <p class="card-text">{{ post.content | raw }}</p>
+            </div>
 
-        <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
-            <p class="card-text">{{ post.content | raw }}</p>
-        </div>
-
-        <div class="card-body">
-            <p>publié le: {{ post.createdAt ? post.createdAt|date('d-m-Y H:i') : '' }}
-                {% if post.author %}
-                    <br>
-                    par: {{ post.author.userName }}
-                {% endif %}
-                {% if post.updatedAt %}
-                    <br>
-                    mis à jour le: {{ post.updatedAt ? post.updatedAt|date('d/m/Y H:i') : '' }}
-                {% endif %}
-                {% if post.tags.count %}
-                    <p>Tags</p>
-                        <ul>
-                            {% for tag in post.tags %}
-                                <li>
-                                    <a href="{{ path('app_tag_show', {'id': tag.id}) }}">
-                                        {{ tag.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                {% endif %}
-            {% if post.files.count %}
-                <p>Fichiers</p>
+            <hr>
+            <div class="card-body">
+                <p>publié le: {{ post.createdAt ? post.createdAt|date('d-m-Y H:i') : '' }}
+                    {% if post.author %}
+                        <br>
+                        par: {{ post.author.userName }}
+                    {% endif %}
+                    {% if post.updatedAt %}
+                        <br>
+                        mis à jour le: {{ post.updatedAt ? post.updatedAt|date('d/m/Y H:i') : '' }}
+                    {% endif %}
+                    {% if post.tags.count %}
+                <p>Tags</p>
                 <ul>
-                    {% for file in post.files %}
+                    {% for tag in post.tags %}
                         <li>
-                            <a href="{{ path('app_file_show', {'id': file.id}) }}">
-                                {{ file.name }}
+                            <a href="{{ path('app_tag_show', {'id': tag.id}) }}">
+                                {{ tag.name }}
                             </a>
                         </li>
                     {% endfor %}
                 </ul>
-            {% endif %}
-            </p>
+                {% endif %}
+                {% if post.files.count %}
+                    <p>Fichiers</p>
+                    <ul>
+                        {% for file in post.files %}
+                            <li>
+                                <a href="{{ path('app_file_show', {'id': file.id}) }}">
+                                    {{ file.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                </p>
+            </div>
         </div>
+
     </div>
+
     <a href="{{ path('app_post_category_show', { 'id':post.postCategory.id }) }}">
         <button class="btn btn-info">
             Retour

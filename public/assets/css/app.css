@@ -70,6 +70,6 @@ p, button, form, .form-control, th {
     width: fit-content;
 }
 #post-card {
-    width: fit-content;
+    /*width: fit-content;*/
     margin-bottom: 1em;
 }
