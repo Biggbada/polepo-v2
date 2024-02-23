@@ -58,6 +58,80 @@
         </div>
 
     </div>
+{#    {% if post.relatedPost %}#}
+        <div class="row">
+            <h2>Commentaires</h2>
+            {% for comment in post.comments %}
+                <div id="post-card" class="card text-bg-dark mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ path('app_post_show', {'id': comment.id}) }}">
+                                {{ comment.title }}
+                            </a>
+                        </h5>
+                        {% if comment.featuredImg %}
+                            <a href="{{ path('app_file_show', {'id': comment.featuredImg.id}) }}">
+                                <img id="article-header"
+                                     src="{{ asset('uploads/files/' ~ comment.featuredImg.category.path ~ '/' ~comment.featuredImg.url) }}"
+                                     class="img-fluid" alt="...">
+                            </a>
+                        {% endif %}
+                        <hr>
+                        <p class="card-text">{{ comment.content | raw }}</p>
+                    </div>
+
+                    <hr>
+                    <div class="card-body">
+                        <p>publié le: {{ comment.createdAt ? comment.createdAt|date('d-m-Y H:i') : '' }}
+                            {% if comment.author %}
+                                <br>
+                                par: {{ comment.author.userName }}
+                            {% endif %}
+                            {% if comment.updatedAt %}
+                                <br>
+                                mis à jour le: {{ comment.updatedAt ? comment.updatedAt|date('d/m/Y H:i') : '' }}
+                            {% endif %}
+                            {% if comment.tags.count %}
+                        <p>Tags</p>
+                        <ul>
+                            {% for tag in comment.tags %}
+                                <li>
+                                    <a href="{{ path('app_tag_show', {'id': tag.id}) }}">
+                                        {{ tag.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% if comment.files.count %}
+                            <p>Fichiers</p>
+                            <ul>
+                                {% for file in comment.files %}
+                                    <li>
+                                        <a href="{{ path('app_file_show', {'id': file.id}) }}">
+                                            {{ file.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+{#    {% endif %}#}
+    <div class="row">
+        <div class="card text-bg-dark mt-2">
+            <div class="card-header">
+                <h2>Commenter</h2>
+            </div>
+            <div class="card-body">
+                {{ include('post/_form.html.twig', {'button_label': 'Update'}) }}
+            </div>
+        </div>
+    </div>
+
 
     <a href="{{ path('app_post_category_show', { 'id':post.postCategory.id }) }}">
         <button class="btn btn-info">

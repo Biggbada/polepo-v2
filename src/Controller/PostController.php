@@ -120,11 +120,96 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Post $post): Response
+    #[Route('/{id}', name: 'app_post_show', methods: ['GET', 'POST'])]
+    public function show(Post $post, Request $request, PostCategoryRepository $categoryRepository, FileCategoryRepository $fileCategoryRepository, SluggerInterface $slugger, FileUploader $fileUploader, EntityManagerInterface $entityManager): Response
     {
+
+        $comment = new Post();
+        $comment->setRelatedPost($post);
+        $post->setRelatedPost($comment);
+        $form = $this->createForm(PostType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->getUser()) {
+                $comment->setAuthor($this->getUser());
+            }
+            $comment->setCreatedAt(new \DateTimeImmutable('now'));
+            $category = $categoryRepository->find($post->getPostCategory()) ;
+            $comment->setPostCategory($category);
+
+            /** @var UploadedFile $featuredImg */
+            $featuredImg = $form->get('featuredImg')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($featuredImg) {
+                $originalFilename = $featuredImg->getClientOriginalName();
+                $fileCategory = $fileCategoryRepository->find(1);
+                $file = new File();
+                $file->setCategory($fileCategory);
+
+                $targetDirectory = $this->getParameter('files_directory').'/'.$file->getCategory()->getPath();
+
+
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $extension = $featuredImg->guessExtension();
+                $newFilename = $safeFilename.'.'.$extension;
+                $file->setName($newFilename);
+                $fileUrl = $fileUploader->upload($featuredImg, $targetDirectory);
+
+                $file->setUrl($fileUrl);
+                $file->setExtension($extension);
+                $comment->setFeaturedImg($file);
+                if ($this->getUser()) {
+                    $file->setUploadedBy($this->getUser());
+                }
+                $entityManager->persist($file);
+
+
+
+            }
+
+            /** @var UploadedFile $attachment */
+            $attachment = $form->get('attachment')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($attachment) {
+                $originalFilename = $attachment->getClientOriginalName();
+                $fileCategory = $fileCategoryRepository->find(1);
+                $file = new File();
+                $file->setCategory($fileCategory);
+
+                $targetDirectory = $this->getParameter('files_directory').'/'.$file->getCategory()->getPath();
+
+
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $extension = $attachment->guessExtension();
+                $newFilename = $safeFilename.'.'.$extension;
+                $file->setName($newFilename);
+                $fileUrl = $fileUploader->upload($attachment, $targetDirectory);
+
+                $file->setUrl($fileUrl);
+                $file->setExtension($extension);
+                $file->setPost($comment);
+                if ($this->getUser()) {
+                    $file->setUploadedBy($this->getUser());
+                }
+                $entityManager->persist($file);
+
+
+
+            }
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_post_category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
+        }
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'form' =>$form
         ]);
     }
 
