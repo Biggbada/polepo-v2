@@ -59,16 +59,14 @@
         </div>
 
     </div>
-{#    {% if post.relatedPost %}#}
+    {% if post.comments.count %}
         <div class="row">
             <h2>Commentaires</h2>
             {% for comment in post.comments %}
                 <div id="post-card" class="card text-bg-dark mt-4">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ path('app_post_show', {'id': comment.id}) }}">
-                                {{ comment.title }}
-                            </a>
+                            {{ comment.title }}
                         </h5>
                         {% if comment.featuredImg %}
                             <a href="{{ path('app_file_show', {'id': comment.featuredImg.id}) }}">
@@ -121,7 +119,7 @@
                 </div>
             {% endfor %}
         </div>
-{#    {% endif %}#}
+    {% endif %}
     <div class="row">
         <div class="card text-bg-dark mt-2">
             <div class="card-header">

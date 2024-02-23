@@ -38,12 +38,6 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: File::class)]
     private Collection $files;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
-    private ?self $relatedPost = null;
-
-    #[ORM\OneToMany(mappedBy: 'relatedPost', targetEntity: self::class)]
-    private Collection $comments;
-
     public $attachment = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
@@ -51,6 +45,12 @@ class Post
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?File $featuredImg = null;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
+    private ?self $comment = null;
+
+    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: self::class)]
+    private Collection $comments;
 
     public function __construct()
     {
@@ -178,48 +178,6 @@ class Post
         return $this;
     }
 
-    public function getRelatedPost(): ?self
-    {
-        return $this->relatedPost;
-    }
-
-    public function setRelatedPost(?self $relatedPost): static
-    {
-        $this->relatedPost = $relatedPost;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(self $comment): static
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setRelatedPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(self $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getRelatedPost() === $this) {
-                $comment->setRelatedPost(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getAuthor(): ?User
     {
         return $this->author;
@@ -248,5 +206,47 @@ class Post
     {
         return $this->title;
 
+    }
+
+    public function getComment(): ?self
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?self $comment): static
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(self $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(self $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getComment() === $this) {
+                $comment->setComment(null);
+            }
+        }
+
+        return $this;
     }
 }
