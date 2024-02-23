@@ -52,6 +52,11 @@
                                 Mis à jour le {{ post.createdAt | date('d-m-Y-H-i') }}
                             {% endif %}
                         </p>
+                        {% if post.comments %}
+                            <p>
+                                {{ post.comments.count }} commentaire(s)
+                            </p>
+                        {% endif %}
                         {% if post.files %}
                             <ul>
                                 {% for file in post.files %}
