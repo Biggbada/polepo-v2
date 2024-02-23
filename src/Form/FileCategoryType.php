@@ -16,7 +16,10 @@ class FileCategoryType extends AbstractType
             ->add('title')
             ->add('description')
             ->add('path', TextType::class, [
-                'label' => 'Nom du dossier'
+                'label' => 'Nom du dossier',
+                'attr' => [
+                    'class' => 'text-bg-dark'
+                ]
             ])
         ;
     }

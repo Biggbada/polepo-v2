@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Post;
+use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,13 +20,22 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'titre'
+                'label' => 'titre',
+                'attr' => [
+                    'class' => 'text-bg-dark'
+                ]
             ])
             ->add('content', TextareaType::class, [
-                'label' => 'Contenu'
+                'label' => 'Contenu',
+                'attr' => [
+                    'class' => 'text-bg-dark'
+                ]
             ])
             ->add('featuredImg', FileType::class, [
                 'label' => 'Image mise en avant',
+                'attr' => [
+                    'class' => 'text-bg-dark'
+                ],
 
                 // unmapped means that this field is not associated to any entity property
                 'mapped' => false,
@@ -38,6 +49,9 @@ class PostType extends AbstractType
             ])
             ->add('attachment', FileType::class, [
                 'label' => 'Fichier joint',
+                'attr' => [
+                    'class' => 'text-bg-dark'
+                ],
 
                 // unmapped means that this field is not associated to any entity property
                 'mapped' => false,

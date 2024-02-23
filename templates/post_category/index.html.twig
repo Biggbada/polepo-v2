@@ -6,7 +6,8 @@
     <h1>Catégories d'articles</h1>
     <div class="row gap-2">
         {% for category in post_categories %}
-            <div id="post-card" class="card text-bg-dark mt-4">
+            <div id="post-card" class="card text-bg-dark col-3git add .
+             mt-4">
                 <a href="{{ path('app_post_category_show', {'id': category.id}) }}">
                     <img id="article-header" src="{{ asset('uploads/files/' ~ category.featuredImg.category.path ~ '/' ~category.featuredImg.url) }}" class="card-img-top" alt="...">
                     <div class="card-body">

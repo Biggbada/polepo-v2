@@ -17,12 +17,18 @@ class FileType extends AbstractType
         $builder
 
             ->add('attachment', \Symfony\Component\Form\Extension\Core\Type\FileType::class, [
-                'label' => 'FIchier'
+                'label' => 'FIchier',
+                'attr' => [
+                    'class' => 'text-bg-dark'
+                ]
             ])
             ->add('category', EntityType::class, [
                 'label' => 'Catégorie',
                 'class' => FileCategory::class,
                 'choice_label' => 'title',
+                'attr' => [
+                    'class' => 'text-bg-dark'
+                ]
             ])
         ;
     }
