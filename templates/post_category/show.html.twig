@@ -54,10 +54,11 @@
                         </a>
 
                     {% endif %}
-                    </p>
                     {% if post.updatedAt %}
                          mis à jour le {{ post.updatedAt | date('d-m-Y à H:i') }}
                     {% endif %}
+
+                    </p>
                     {% if post.files %}
                         <ul>
                             {% for file in post.files %}

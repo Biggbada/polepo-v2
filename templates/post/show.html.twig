@@ -11,7 +11,7 @@
                     <a href="{{ path('app_file_show', {'id': post.featuredImg.id}) }}">
                         <img id="article-header"
                              src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}"
-                             class="card-img-top" alt="...">
+                             class="img-fluid" alt="...">
                     </a>
                 {% endif %}
                 <hr>
