@@ -10,7 +10,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
                     </li>
-                    {% if app.user %}
+                    {% if is_granted('ROLE_TRUSTED_USER') %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Articles

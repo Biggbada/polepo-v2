@@ -40,6 +40,9 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/post, roles: ROLE_TRUSTED_USER }
+        - { path: ^/post/category/, roles: ROLE_TRUSTED_USER }
+        - { path: ^/file, roles: ROLE_TRUSTED_USER }
+        - { path: ^/comment, roles: ROLE_TRUSTED_USER }
         - { path: ^/, roles: PUBLIC_ACCESS }
 
     role_hierarchy:
