@@ -1,6 +1,7 @@
 .env
 .idea/
 /public/uploads/
+/public/assets/
 /migrations/
 /node_modules/
 
