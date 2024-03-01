@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\File;
 use App\Entity\Post;
+use App\Form\CommentType;
 use App\Form\PostType;
 use App\Repository\FileCategoryRepository;
 use App\Repository\PostCategoryRepository;
@@ -40,8 +42,7 @@ class PostController extends AbstractController
                 $post->setAuthor($this->getUser());
             }
             $post->setCreatedAt(new \DateTimeImmutable('now'));
-            $category = $categoryRepository->find($request->get('category')) ;
-            $post->setPostCategory($category);
+
 
             /** @var UploadedFile $featuredImg */
             $featuredImg = $form->get('featuredImg')->getData();
@@ -50,8 +51,8 @@ class PostController extends AbstractController
             // so the PDF file must be processed only when a file is uploaded
             if ($featuredImg) {
                 $originalFilename = $featuredImg->getClientOriginalName();
-                $fileCategory = $fileCategoryRepository->find(1);
                 $file = new File();
+                $fileCategory = $fileCategoryRepository->find(1);
                 $file->setCategory($fileCategory);
 
                 $targetDirectory = $this->getParameter('files_directory').'/'.$file->getCategory()->getPath();
@@ -66,6 +67,7 @@ class PostController extends AbstractController
 
                 $file->setUrl($fileUrl);
                 $file->setExtension($extension);
+
                 $post->setFeaturedImg($file);
                 if ($this->getUser()) {
                     $file->setUploadedBy($this->getUser());
@@ -111,7 +113,7 @@ class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_post_category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_category_show', ['id' => $post->getPostCategory()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('post/new.html.twig', [
@@ -124,50 +126,19 @@ class PostController extends AbstractController
     public function show(Post $post, Request $request, PostCategoryRepository $categoryRepository, FileCategoryRepository $fileCategoryRepository, SluggerInterface $slugger, FileUploader $fileUploader, EntityManagerInterface $entityManager): Response
     {
 
-        $comment = new Post();
-        $post->addComment($comment);
-        $form = $this->createForm(PostType::class, $comment);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $post->addComment($comment);
+
             if ($this->getUser()) {
                 $comment->setAuthor($this->getUser());
             }
             $comment->setCreatedAt(new \DateTimeImmutable('now'));
-            $category = $categoryRepository->find($post->getPostCategory()) ;
-            $comment->setPostCategory($category);
-
-            /** @var UploadedFile $featuredImg */
-            $featuredImg = $form->get('featuredImg')->getData();
-
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            if ($featuredImg) {
-                $originalFilename = $featuredImg->getClientOriginalName();
-                $fileCategory = $fileCategoryRepository->find(1);
-                $file = new File();
-                $file->setCategory($fileCategory);
-
-                $targetDirectory = $this->getParameter('files_directory').'/'.$file->getCategory()->getPath();
+            $comment->setParent($post);
 
 
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $extension = $featuredImg->guessExtension();
-                $newFilename = $safeFilename.'.'.$extension;
-                $file->setName($newFilename);
-                $fileUrl = $fileUploader->upload($featuredImg, $targetDirectory);
-
-                $file->setUrl($fileUrl);
-                $file->setExtension($extension);
-                $comment->setFeaturedImg($file);
-                if ($this->getUser()) {
-                    $file->setUploadedBy($this->getUser());
-                }
-                $entityManager->persist($file);
-
-
-
-            }
 
             /** @var UploadedFile $attachment */
             $attachment = $form->get('attachment')->getData();
@@ -192,7 +163,7 @@ class PostController extends AbstractController
 
                 $file->setUrl($fileUrl);
                 $file->setExtension($extension);
-                $file->setPost($comment);
+                $file->setComment($comment);
                 if ($this->getUser()) {
                     $file->setUploadedBy($this->getUser());
                 }
@@ -204,7 +175,7 @@ class PostController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_post_category_show', ['id' => $category->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_category_show', ['id' => $post->getPostCategory()->getId()], Response::HTTP_SEE_OTHER);
         }
         return $this->render('post/show.html.twig', [
             'post' => $post,
@@ -300,10 +271,38 @@ class PostController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_post_delete', methods: ['POST'])]
     public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
+
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
+
+            $comments = $post->getComments();
+            if ($comments) {
+                foreach ($comments as $comment) {
+                    $files = $comment->getFiles();
+                    if ($files) {
+                        foreach ($files as $file) {
+                            $comment->removeFile($file);
+                            $entityManager->remove($file);
+                            $entityManager->persist($comment);
+                        }
+                        $post->removeComment($comment);
+                        $entityManager->remove($comment);
+                        $entityManager->persist($post);
+                    }
+                }
+            }
+
+            $attachedFiles = $post->getFiles();
+            if ($attachedFiles) {
+                foreach ($attachedFiles as $attachedFile) {
+                    $post->removeFile($attachedFile);
+                    $entityManager->remove($attachedFile);
+                    $entityManager->persist($post);
+                }
+            }
+
             $entityManager->remove($post);
             $entityManager->flush();
         }

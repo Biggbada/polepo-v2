@@ -46,10 +46,7 @@ class Post
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?File $featuredImg = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
-    private ?self $comment = null;
-
-    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
     public function __construct()
@@ -208,45 +205,34 @@ class Post
 
     }
 
-    public function getComment(): ?self
-    {
-        return $this->comment;
-    }
-
-    public function setComment(?self $comment): static
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, self>
+     * @return Collection<int, Comment>
      */
     public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function addComment(self $comment): static
+    public function addComment(Comment $comment): static
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
-            $comment->setComment($this);
+            $comment->setParent($this);
         }
 
         return $this;
     }
 
-    public function removeComment(self $comment): static
+    public function removeComment(Comment $comment): static
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getComment() === $this) {
-                $comment->setComment(null);
+            if ($comment->getParent() === $this) {
+                $comment->setParent(null);
             }
         }
 
         return $this;
     }
+
 }

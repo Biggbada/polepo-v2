@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Post;
+use App\Entity\PostCategory;
 use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -24,6 +25,11 @@ class PostType extends AbstractType
                 'attr' => [
                     'class' => 'text-bg-dark'
                 ]
+            ])
+            ->add('postCategory', EntityType::class, [
+                'label' => 'Catégorie',
+                'class' => PostCategory::class,
+                'mapped' => true
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu',

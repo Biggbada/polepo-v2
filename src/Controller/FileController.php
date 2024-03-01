@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\File;
 use App\Form\FileType;
 use App\Repository\FileRepository;
+use App\Repository\PostRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -97,9 +98,21 @@ class FileController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_file_delete', methods: ['POST'])]
-    public function delete(Request $request, File $file, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, File $file, EntityManagerInterface $entityManager, PostRepository $postRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->request->get('_token'))) {
+            $isFeaturedImgOf = $postRepository->findOneBy(['featuredImg' => $file->getId()]);
+            if ($isFeaturedImgOf) {
+                $isFeaturedImgOf->setFeaturedImg(null);
+                $entityManager->persist($isFeaturedImgOf);
+            }
+            $isAttachedToPost = $file->getPost();
+            if($isAttachedToPost) {
+                $isAttachedToPost->removeFile($file);
+                $entityManager->persist($isAttachedToPost);
+            }
+
+
             $entityManager->remove($file);
             $entityManager->flush();
         }
