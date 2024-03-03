@@ -18,4 +18,12 @@ class HomeController extends AbstractController
             'posts' => $postRepository->findAll()
         ]);
     }
+    #[Route('/ambi', name: 'app_ambilight')]
+    public function indexAmbi(PostRepository $postRepository): Response
+    {
+        return $this->render('tests-pages/index.html.twig', [
+            'controller_name' => 'HomeController',
+            'posts' => $postRepository->findAll()
+        ]);
+    }
 }

@@ -5,13 +5,15 @@
 {% block stylesheets %}
     {{ parent() }}
     <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
+    <link rel="stylesheet" href="{{ asset('assets/ambilight/style.css') }}">
+
 
 
     {#    <script src="https://cdn.jsdelivr.net/npm/fast-average-color@9.4.0/dist/index.browser.min.js"></script>#}
 {% endblock %}
 {% block body %}
-    <div class="row">
-        <div id="post-card" class="card text-bg-dark mt-4">
+    <div class="row" id="main-row">
+        <div id="post-card" class="card text-bg-dark mt-4 col-6">
             <div class="card-body">
                 <h5 class="card-title">{{ post.title }}</h5>
 
@@ -152,10 +154,51 @@
             const anchor = document.createElement( 'a' );
 
             anchor.setAttribute( 'href', element.getAttribute( 'url' ) );
+            console.log(element.getAttribute('url'))
+            const url = element.getAttribute('url')
+            if (url.includes('youtube')) {
+                const parentContainer = element.parentElement;
+                console.log('parentContainer', parentContainer, 'parentelement', parentContainer.parentElement)
+                // element.parentElement.style.display = 'none'
+                console.log(url + 'isYoutube')
+                const splittedUrl = url.split('?v=');
+                const videoWrapper = document.createElement('div')
+                videoWrapper.className = 'videoWrapper'
+                videoWrapper.style.marginTop = 'auto'
+
+                const ambilightWrapper = document.createElement('div')
+                ambilightWrapper.className = 'ambilightWrapper'
+
+                const aspectRatio = document.createElement('div')
+                aspectRatio.className = 'aspectRatio'
+
+                const ambilightContainer = document.createElement('div')
+                ambilightContainer.id = 'ambilight'
+
+                const videoContainer = document.createElement('div')
+                videoContainer.id = 'video'
+
+                const mainRow = document.querySelector('#main-row');
+                const col6 = document.createElement('div')
+                col6.className = 'col-6 mt-4'
+                mainRow.appendChild(col6)
+
+                col6.append(videoWrapper)
+                parentContainer.style.display = 'none'
+                videoWrapper.appendChild(ambilightWrapper)
+                ambilightWrapper.appendChild(aspectRatio)
+                aspectRatio.appendChild(ambilightContainer)
+                aspectRatio.appendChild(videoContainer)
+                const videoId = splittedUrl[1];
+                videoWrapper.id = videoId
+            } else {
+                console.log(url + 'is not youtube')
+            }
             anchor.className = 'embedly-card';
 
             element.appendChild( anchor );
         } );
     </script>
+    <script src="{{ asset('assets/ambilight/ambilight.js') }}"></script>
 
 {% endblock %}
