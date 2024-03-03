@@ -2,6 +2,13 @@
 
 {% block title %}Post{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
+
+
+    {#    <script src="https://cdn.jsdelivr.net/npm/fast-average-color@9.4.0/dist/index.browser.min.js"></script>#}
+{% endblock %}
 {% block body %}
     <div class="row">
         <div id="post-card" class="card text-bg-dark mt-4">
@@ -133,4 +140,22 @@
     {% if post.author == app.user or is_granted('ROLE_ADMIN') %}
         {{ include('post/_delete_form.html.twig') }}
     {% endif %}
+{% endblock %}
+{% block javascripts %}
+
+
+    {{ parent() }}
+    <script>
+        document.querySelectorAll( 'oembed[url]' ).forEach( element => {
+            // Create the <a href="..." class="embedly-card"></a> element that Embedly uses
+            // to discover the media.
+            const anchor = document.createElement( 'a' );
+
+            anchor.setAttribute( 'href', element.getAttribute( 'url' ) );
+            anchor.className = 'embedly-card';
+
+            element.appendChild( anchor );
+        } );
+    </script>
+
 {% endblock %}

@@ -73,3 +73,7 @@ p, button, form, .form-control, th {
 .ck-content {
     min-height: 200px;
 }
+
+.brd {
+    display: none !important;
+}

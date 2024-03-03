@@ -3,7 +3,10 @@
 {% block title %}Éditer {{ post.title }}{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
+    <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
+
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+
 
 {#    <script src="https://cdn.jsdelivr.net/npm/fast-average-color@9.4.0/dist/index.browser.min.js"></script>#}
 {% endblock %}
@@ -36,4 +39,6 @@
             .catch( error => {
                 console.error( error );
             } );    </script>
+
+
 {% endblock %}
