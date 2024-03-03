@@ -42,6 +42,7 @@ class PostController extends AbstractController
                 $post->setAuthor($this->getUser());
             }
             $post->setCreatedAt(new \DateTimeImmutable('now'));
+            $post->setPostCategory($categoryRepository->find($request->get('category')));
 
 
             /** @var UploadedFile $featuredImg */

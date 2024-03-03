@@ -26,13 +26,10 @@ class PostType extends AbstractType
                     'class' => 'text-bg-dark'
                 ]
             ])
-            ->add('postCategory', EntityType::class, [
-                'label' => 'Catégorie',
-                'class' => PostCategory::class,
-                'mapped' => true
-            ])
+
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu',
+                'required' => false,
                 'attr' => [
                     'class' => 'text-bg-dark'
                 ]

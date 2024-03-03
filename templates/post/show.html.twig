@@ -13,7 +13,7 @@
 {% endblock %}
 {% block body %}
     <div class="row" id="main-row">
-        <div id="post-card" class="card text-bg-dark mt-4 col-6">
+        <div id="post-card" class="card text-bg-dark mt-4 col-9">
             <div class="card-body">
                 <h5 class="card-title">{{ post.title }}</h5>
 
@@ -179,11 +179,13 @@
                 videoContainer.id = 'video'
 
                 const mainRow = document.querySelector('#main-row');
-                const col6 = document.createElement('div')
-                col6.className = 'col-6 mt-4'
-                mainRow.appendChild(col6)
+                const postContent = document.querySelector('#post-card');
+                postContent.className = 'card text-bg-dark mt-4 col-6'
+                const videocontainer = document.createElement('div')
+                videocontainer.className = 'col-6 mt-4'
+                mainRow.appendChild(videocontainer)
 
-                col6.append(videoWrapper)
+                videocontainer.append(videoWrapper)
                 parentContainer.style.display = 'none'
                 videoWrapper.appendChild(ambilightWrapper)
                 ambilightWrapper.appendChild(aspectRatio)
