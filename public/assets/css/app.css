@@ -70,3 +70,6 @@ p, button, form, .form-control, th {
     /*width: fit-content;*/
     margin-bottom: 1em;
 }
+.ck-content {
+    min-height: 200px;
+}

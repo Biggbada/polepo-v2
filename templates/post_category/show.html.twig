@@ -38,7 +38,9 @@
                     <hr>
 
                     {% if post.featuredImg %}
-                        <img id="article-header" class="img-fluid" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">
+                        <div class="image-container">
+                            <img id="article-header" class="img-fluid" src="{{ asset('uploads/files/' ~ post.featuredImg.category.path ~ '/' ~post.featuredImg.url) }}" alt="">
+                        </div>
                     {% endif %}
 
                 </div>
@@ -99,4 +101,21 @@
     <hr>
     {{ include('post_category/_delete_form.html.twig') }}
     <hr>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+    const fac = new FastAverageColor();
+    const container = document.querySelector('.image-container');
+    console.log(container)
+
+    fac.getColorAsync(container.querySelector('img'))
+        .then(color => {
+            container.style.backgroundColor = color.rgba;
+            container.style.color = color.isDark ? '#fff' : '#000';
+        })
+        .catch(e => {
+            console.log(e);
+        });
+</script>
 {% endblock %}
